@@ -101,6 +101,16 @@ createOpenJDKArchive()
 
   EXT=$(getArchiveExtension)
 
+  if [[ ! -z "${BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]}" ]]; then
+      local hotswapAgentDir=${repoDir}
+      case "${BUILD_CONFIG[OS_KERNEL_NAME]}" in
+          "darwin") hotswapAgentDir="${repoDir}/Contents/Home" ;;
+      esac
+      echo "Downloading HotswapAgent from ${BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]}"
+      mkdir -p "${hotswapAgentDir}/lib/hotswap"
+      wget -q -O "${hotswapAgentDir}/lib/hotswap/hotswap-agent.jar" "${BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]}"
+  fi
+
   local fullPath
   if [[ "${BUILD_CONFIG[OS_KERNEL_NAME]}" != "darwin" ]]; then
     fullPath=$(crossPlatformRealPath $repoDir)
@@ -122,8 +132,10 @@ function setBootJdk() {
   if [ -z "${BUILD_CONFIG[JDK_BOOT_DIR]}" ] ; then
     echo "Searching for JDK_BOOT_DIR"
 
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      BUILD_CONFIG[JDK_BOOT_DIR]=$(dirname $(dirname $(greadlink -f $(which javac))))
     # shellcheck disable=SC2046,SC2230
-    if [[ "${BUILD_CONFIG[OS_KERNEL_NAME]}" == "darwin" ]]; then
+    elif [[ "${BUILD_CONFIG[OS_KERNEL_NAME]}" == "darwin" ]]; then
       BUILD_CONFIG[JDK_BOOT_DIR]="$(/usr/libexec/java_home)"
     else
       BUILD_CONFIG[JDK_BOOT_DIR]=$(dirname $(dirname $(readlink -f $(which javac))))

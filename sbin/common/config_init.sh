@@ -36,6 +36,7 @@ BRANCH
 BUILD_FULL_NAME
 BUILD_VARIANT
 CERTIFICATE
+CHECK_FINGERPRINT
 CLEAN_DOCKER_BUILD
 CLEAN_GIT_REPO
 CLEAN_LIBS
@@ -49,10 +50,12 @@ DISABLE_ADOPT_BRANCH_SAFETY
 DOCKER
 DOCKER_FILE_PATH
 DOCKER_SOURCE_VOLUME_NAME
+DISABLE_TEST_IMAGE
 FREETYPE
 FREETYPE_DIRECTORY
 FREETYPE_FONT_BUILD_TYPE_PARAM
 FREETYPE_FONT_VERSION
+HSWAP_AGENT_DOWNLOAD_URL
 KEEP_CONTAINER
 JDK_BOOT_DIR
 JDK_PATH
@@ -187,6 +190,9 @@ function parseConfigurationArguments() {
         "--make-args" )
         BUILD_CONFIG[USER_SUPPLIED_MAKE_ARGS]="$1"; shift;;
 
+        "--check-fingerprint" )
+        BUILD_CONFIG[CHECK_FINGERPRINT]="$1"; shift;;
+
         "--clean-docker-build" | "-c" )
         BUILD_CONFIG[CLEAN_DOCKER_BUILD]=true;;
 
@@ -285,6 +291,12 @@ function parseConfigurationArguments() {
 
         "--jvm-variant"  | "-V" )
         BUILD_CONFIG[JVM_VARIANT]="$1"; shift;;
+
+        "--disable-test-image" )
+        BUILD_CONFIG[DISABLE_TEST_IMAGE]=true;;
+
+        "--hswap-agent-download-url" )
+        BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]="$1"; shift;;
 
         *) echo >&2 "Invalid build.sh option: ${opt}"; exit 1;;
       esac
@@ -439,6 +451,12 @@ function configDefaults() {
   BUILD_CONFIG[ADOPT_PATCHES]=true
 
   BUILD_CONFIG[DISABLE_ADOPT_BRANCH_SAFETY]=false
+
+  BUILD_CONFIG[DISABLE_TEST_IMAGE]=false
+
+  BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]=${BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]:-""}
+
+  BUILD_CONFIG[CHECK_FINGERPRINT]=true
 }
 
 # Declare the map of build configuration that we're going to use

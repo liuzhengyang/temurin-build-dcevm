@@ -173,6 +173,9 @@ setRepository() {
       echo "Adopt only currently supports corretto for JDK8"
       exit 1
     fi
+  elif [[ "${BUILD_CONFIG[BUILD_VARIANT]}" == "dcevm" ]]
+  then
+    suffix="HotswapProjects/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}-dcevm";
   else
     suffix="adoptopenjdk/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}";
   fi
