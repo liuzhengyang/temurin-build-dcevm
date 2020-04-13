@@ -265,7 +265,7 @@ downloadFile() {
 
   # Temporary fudge as curl on my windows boxes is exiting with RC=127
   if [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] ; then
-    wget -O "${targetFileName}" "${url}"
+    wget --no-check-certificate -O "${targetFileName}" "${url}"
   else
     curl -L -o "${targetFileName}" "${url}"
   fi
