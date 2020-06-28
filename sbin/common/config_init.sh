@@ -56,6 +56,7 @@ FREETYPE_DIRECTORY
 FREETYPE_FONT_BUILD_TYPE_PARAM
 FREETYPE_FONT_VERSION
 HSWAP_AGENT_DOWNLOAD_URL
+HSWAP_AGENT_CORE_DOWNLOAD_URL
 KEEP_CONTAINER
 JDK_BOOT_DIR
 JDK_PATH
@@ -298,6 +299,9 @@ function parseConfigurationArguments() {
         "--hswap-agent-download-url" )
         BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]="$1"; shift;;
 
+        "--hswap-agent-core-download-url" )
+        BUILD_CONFIG[HSWAP_AGENT_CORE_DOWNLOAD_URL]="$1"; shift;;
+
         *) echo >&2 "Invalid build.sh option: ${opt}"; exit 1;;
       esac
     done
@@ -455,6 +459,8 @@ function configDefaults() {
   BUILD_CONFIG[DISABLE_TEST_IMAGE]=false
 
   BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]=${BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]:-""}
+
+  BUILD_CONFIG[HSWAP_AGENT_CORE_DOWNLOAD_URL]=${BUILD_CONFIG[HSWAP_AGENT_CORE_DOWNLOAD_URL]:-""}
 
   BUILD_CONFIG[CHECK_FINGERPRINT]=true
 }
