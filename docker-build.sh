@@ -76,11 +76,52 @@ buildOpenJDKViaDocker()
   # TODO This could be extracted overridden by the user if we support more
   # architectures going forwards
   local container_architecture="x86_64/ubuntu"
-
+  local build_variant_flag=""
   BUILD_CONFIG[DOCKER_FILE_PATH]="docker/${BUILD_CONFIG[OPENJDK_CORE_VERSION]}/$container_architecture"
+  
+  if [ "${BUILD_CONFIG[BUILD_VARIANT]}" == "openj9" ]; then
+    build_variant_flag="--openj9"
+  fi
+  docker/dockerfile-generator.sh --version "${BUILD_CONFIG[OPENJDK_FEATURE_NUMBER]}" --path "${BUILD_CONFIG[DOCKER_FILE_PATH]}" "$build_variant_flag"
 
   # shellcheck disable=SC1090
   source "${BUILD_CONFIG[DOCKER_FILE_PATH]}/dockerConfiguration.sh"
+
+    local openjdk_core_version=${BUILD_CONFIG[OPENJDK_CORE_VERSION]}
+    # test-image and debug-image targets are optional - build scripts check whether the directories exist
+    local openjdk_test_image_path="test"
+    local openjdk_debug_image_path="debug-image"
+    local jdk_directory=""
+    local jre_directory=""
+
+    if [ "$openjdk_core_version" == "${JDK8_CORE_VERSION}" ]; then
+      case "${BUILD_CONFIG[OS_KERNEL_NAME]}" in
+      "darwin")
+        jdk_directory="j2sdk-bundle/jdk*.jdk"
+        jre_directory="j2re-bundle/jre*.jre"
+      ;;
+      *)
+        jdk_directory="j2sdk-image"
+        jre_directory="j2re-image"
+      ;;
+      esac
+    else
+      case "${BUILD_CONFIG[OS_KERNEL_NAME]}" in
+      "darwin")
+        jdk_directory="jdk-bundle/jdk-*.jdk"
+        jre_directory="jre-bundle/jre-*.jre"
+      ;;
+      *)
+        jdk_directory="jdk"
+        jre_directory="jre"
+      ;;
+      esac
+    fi
+
+    BUILD_CONFIG[JDK_PATH]=$jdk_directory
+    BUILD_CONFIG[JRE_PATH]=$jre_directory
+    BUILD_CONFIG[TEST_IMAGE_PATH]=$openjdk_test_image_path
+    BUILD_CONFIG[DEBUG_IMAGE_PATH]=$openjdk_debug_image_path
 
   if [ -z "$(command -v docker)" ]; then
      # shellcheck disable=SC2154
@@ -157,11 +198,14 @@ buildOpenJDKViaDocker()
   fi
 
   # Run the command string in Docker
-  ${BUILD_CONFIG[DOCKER]} run --name "${BUILD_CONFIG[OPENJDK_CORE_VERSION]}" "${commandString[@]}"
- 
+  ${BUILD_CONFIG[DOCKER]} run --name "${BUILD_CONFIG[OPENJDK_CORE_VERSION]}-${BUILD_CONFIG[BUILD_VARIANT]}" "${commandString[@]}"
+
+  # Tell user where the resulting binary can be found on the host system
+  echo "The finished image can be found in ${hostDir}/workspace/target on the host system"
+
   # If we didn't specify to keep the container then remove it
   if [[ "${BUILD_CONFIG[KEEP_CONTAINER]}" == "false" ]] ; then
-	  echo "Removing container ${BUILD_CONFIG[OPENJDK_CORE_VERSION]}"
-	  ${BUILD_CONFIG[DOCKER]} ps -a | awk '{ print $1,$(NF) }' | grep "${BUILD_CONFIG[OPENJDK_CORE_VERSION]}" | awk '{print $1 }' | xargs -I {} "${BUILD_CONFIG[DOCKER]}" rm {}
+	  echo "Removing container ${BUILD_CONFIG[OPENJDK_CORE_VERSION]}-${BUILD_CONFIG[BUILD_VARIANT]}"
+	  ${BUILD_CONFIG[DOCKER]} ps -a | awk '{ print $1,$(NF) }' | grep "${BUILD_CONFIG[OPENJDK_CORE_VERSION]}-${BUILD_CONFIG[BUILD_VARIANT]}" | awk '{print $1 }' | xargs -I {} "${BUILD_CONFIG[DOCKER]}" rm {}
   fi
 }

@@ -5,8 +5,9 @@ targetConfigurations = [
         ],
         "x64Linux"      : [
                 "hotspot",
-                "hotspot-jfr",
-                "openj9"
+                "openj9",
+                "corretto",
+                "dragonwell"
         ],
         "x32Windows"    : [
                 "hotspot",
@@ -32,7 +33,8 @@ targetConfigurations = [
                 "openj9"
         ],
         "aarch64Linux"  : [
-                "hotspot"
+                "hotspot",
+                "openj9"
         ],
         "arm32Linux"  : [
                 "hotspot"
@@ -43,12 +45,21 @@ targetConfigurations = [
         "x64Solaris": [
                 "hotspot"
         ],
-        "linuxXL"       : [
+        "x64LinuxXL"       : [
+                "openj9"
+        ],
+        "s390xLinuxXL"       : [
+                "openj9"
+        ],
+        "ppc64leLinuxXL"       : [
                 "openj9"
         ],
         "x64MacXL"      : [
                 "openj9"
         ]
 ]
+
+// 17:05
+triggerSchedule="TZ=UTC\n05 17 * * *"
 
 return this
