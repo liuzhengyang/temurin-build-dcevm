@@ -536,7 +536,7 @@ printJavaVersionString() {
 
        echo "Error 'java' does not exist in '$PRODUCT_HOME'."
        exit -1
-     elif [ "${ARCHITECTURE}" == "riscv64" ]; then
+     elif [ -z "${ARCHITECTURE+x}" ] && [ "${ARCHITECTURE}" == "riscv64" ]; then
        # riscv is cross compiled, so we cannot run it on the build system
        # This is a temporary plausible solution in the absence of another fix
        local jdkversion=$(getOpenJdkVersion)
