@@ -55,6 +55,7 @@ DISABLE_ADOPT_BRANCH_SAFETY
 DOCKER
 DOCKER_FILE_PATH
 DOCKER_SOURCE_VOLUME_NAME
+DISABLE_TEST_IMAGE
 FREETYPE
 FREETYPE_DIRECTORY
 FREETYPE_FONT_BUILD_TYPE_PARAM
@@ -328,6 +329,9 @@ function parseConfigurationArguments() {
 
         "--jvm-variant"  | "-V" )
         BUILD_CONFIG[JVM_VARIANT]="$1"; shift;;
+
+        "--disable-test-image" )
+        BUILD_CONFIG[DISABLE_TEST_IMAGE]=true;;
 
         "--hswap-agent-download-url" )
         BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]="$1"; shift;;
