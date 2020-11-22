@@ -55,7 +55,6 @@ DISABLE_ADOPT_BRANCH_SAFETY
 DOCKER
 DOCKER_FILE_PATH
 DOCKER_SOURCE_VOLUME_NAME
-DISABLE_TEST_IMAGE
 FREETYPE
 FREETYPE_DIRECTORY
 FREETYPE_FONT_BUILD_TYPE_PARAM
@@ -204,6 +203,9 @@ function parseConfigurationArguments() {
         "--build-number"  | "-B" )
         BUILD_CONFIG[OPENJDK_BUILD_NUMBER]="$1"; shift;;
 
+        "--check-fingerprint" )
+        BUILD_CONFIG[CHECK_FINGERPRINT]="$1"; shift;;
+
         "--configure-args"  | "-C" )
         BUILD_CONFIG[USER_SUPPLIED_CONFIGURE_ARGS]="$1"; shift;;
 
@@ -326,9 +328,6 @@ function parseConfigurationArguments() {
 
         "--jvm-variant"  | "-V" )
         BUILD_CONFIG[JVM_VARIANT]="$1"; shift;;
-
-        "--disable-test-image" )
-        BUILD_CONFIG[DISABLE_TEST_IMAGE]=true;;
 
         "--hswap-agent-download-url" )
         BUILD_CONFIG[HSWAP_AGENT_DOWNLOAD_URL]="$1"; shift;;
