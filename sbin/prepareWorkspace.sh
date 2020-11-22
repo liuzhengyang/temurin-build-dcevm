@@ -451,7 +451,9 @@ checkingAndDownloadingFreeType() {
   else
     downloadFile "freetype.tar.gz" "https://ci.adoptopenjdk.net/userContent/freetype/freetype-${BUILD_CONFIG[FREETYPE_FONT_VERSION]}.tar.gz"
     downloadFile "freetype.tar.gz.sig" "https://ci.adoptopenjdk.net/userContent/freetype/freetype-${BUILD_CONFIG[FREETYPE_FONT_VERSION]}.tar.gz.sig"
-    checkFingerprint "freetype.tar.gz.sig" "freetype.tar.gz" "freetype" "58E0 C111 E39F 5408 C5D3 EC76 C1A6 0EAC E707 FDA5" "${FREETYPE_LIB_CHECKSUM}"
+    if [[ "${BUILD_CONFIG[CHECK_FINGERPRINT]}" == "true" ]]; then    
+      checkFingerprint "freetype.tar.gz.sig" "freetype.tar.gz" "freetype" "58E0 C111 E39F 5408 C5D3 EC76 C1A6 0EAC E707 FDA5" "${FREETYPE_LIB_CHECKSUM}"
+    fi
 
     rm -rf "./freetype" || true
     mkdir -p "freetype" || true
