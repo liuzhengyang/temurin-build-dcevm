@@ -174,9 +174,9 @@ setRepository() {
   elif [ "${BUILD_CONFIG[OPENJDK_CORE_VERSION]}" == "${JDK8_CORE_VERSION}" ] && [ "${BUILD_CONFIG[OS_ARCHITECTURE]}" == "aarch64" ]; then
     suffix="adoptopenjdk/openjdk-aarch64-jdk8u";
   elif [[ "${BUILD_CONFIG[BUILD_VARIANT]}" == "dcevm" ]]; then
-    suffix="HotswapProjects/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}-dcevm";
+    suffix="liuzhengyang/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}-dcevm";
   else
-    suffix="adoptopenjdk/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}"
+    suffix="liuzhengyang/openjdk-${BUILD_CONFIG[OPENJDK_FOREST_NAME]}"
   fi
 
   local repository
